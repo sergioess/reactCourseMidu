@@ -1,6 +1,6 @@
 import './clase4.css';
 // import { useState } from 'react';
-
+import { Clase4Note } from './Clase4Note';
 
 const notes = [
     {
@@ -43,6 +43,8 @@ const notes = [
 
 
 
+
+
 function Clase4() {
 
     if (!notes) {
@@ -56,12 +58,7 @@ function Clase4() {
             {
                 notes.map((nota) => {
                     return (
-                        <div className="ficha" key={nota.id}><p><strong>{nota.content}</strong></p>
-
-                            <p><small><time>{nota.date}</time></small></p>
-                            <p>Important : {nota.important ? "True" : "false"}</p>
-
-                        </div>
+                        <Clase4Note {...nota} key={nota.id} />
                     );
                 })
             }
