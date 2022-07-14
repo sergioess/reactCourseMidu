@@ -5,7 +5,7 @@ export const Clase4Note = ({ content, date, important }) => {
                 <p className="card-title"><strong>{content}</strong></p>
             </div>
             <p className="card-text"><small><time>{date}</time></small></p>
-            <p>Important : {important ? "True" : "false"}</p>
+            <p>Important : {important ? "True" : "False"}</p>
 
         </div>
     );
