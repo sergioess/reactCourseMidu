@@ -1,0 +1,22 @@
+POST http://localhost:3001/notes/
+Content-Type: application/json
+
+{
+    "content": "ssss",
+    "important" : true
+}
+
+###
+
+POST http://localhost:3001/notes/
+Content-Type: application/json
+
+{
+
+}
+
+###
+
+# Este archivo Se usa para documentar la API-REST
+# Con la extencion "Rest Client"
+# Se usan ### tres almoadillas para separar una de otra
