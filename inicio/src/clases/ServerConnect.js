@@ -78,6 +78,7 @@ export default function ServerConnect() {
         event.preventDefault();
         const newNoteClass = {
             userid: notes.length + 1,
+            id: notes.length + 1,
             title: newNote,
             body: newNote,
         };

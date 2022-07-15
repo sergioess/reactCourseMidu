@@ -7,7 +7,7 @@ export const create = ({ title, body, userId }) => {
 
 
     return axios
-        .post('https://jsonplaceholder.typicode.com/posts', { title, body, userId })
+        .post('http://localhost:3001/api/notes', { title, body, userId })
         .then(response => {
             const { data } = response;
             return data;
@@ -19,7 +19,7 @@ export const create = ({ title, body, userId }) => {
 export const getAll = () => {
 
     return axios
-        .get('https://jsonplaceholder.typicode.com/posts')
+        .get('http://localhost:3001/api/notes')
         .then(response => {
             const { data } = response;
             // console.log(data);
