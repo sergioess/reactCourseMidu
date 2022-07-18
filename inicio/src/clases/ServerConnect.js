@@ -77,7 +77,7 @@ export default function ServerConnect() {
     const handleSubmit = (event) => {
         event.preventDefault();
         const newNoteClass = {
-            userid: notes.length + 1,
+            userId: notes.length + 1,
             id: notes.length + 1,
             title: newNote,
             body: newNote,
@@ -93,6 +93,7 @@ export default function ServerConnect() {
         //     });
 
         setError('');
+        console.log(newNoteClass);
         createPost(newNoteClass).then((newPost) => {
             setNotes((prevNotes) => prevNotes.concat(newPost));
         })

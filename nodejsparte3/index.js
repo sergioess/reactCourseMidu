@@ -1,13 +1,29 @@
-
+require('dotenv').config();
 console.log('Hey');
 // const http = require('http');
+require('./mongodb');
+
+//Los Modulos
 const express = require('express');
-const logger = require('./loggerMiddleware');
-let notes = require('./notesdata');
-
-
 const cors = require('cors');
 
+
+//Los Modelos
+const Note = require('./model/Notes');
+
+//Middlewares
+const logger = require('./middleware/loggerMiddleware');
+const handleErrors = require('./middleware/handleErrors');
+const notFound = require('./middleware/notFound');
+
+
+//Las Variables
+// let notes = require('./notesdata');
+// let notes = [];
+
+
+
+//Inicia la aplicación
 const app = express();
 app.use(cors({
     origin: '*'
@@ -16,13 +32,7 @@ app.use(cors({
 app.use(express.json());
 
 // Este es un middlelware, que intercepta la request y hace algo
-
 app.use(logger);
-
-// const app = http.createServer((request, response) => {
-//     response.writeHead(200, { 'Content-Type': 'application/json' });
-//     response.end(JSON.stringify(notes));
-// });
 
 
 app.get('/', (request, response) => {
@@ -30,26 +40,54 @@ app.get('/', (request, response) => {
 });
 
 
+//Consultar todos
 app.get('/api/notes', (request, response) => {
-    response.json(notes);
+    Note.find({})
+        .then(notes => {
+            console.log(notes);
+            response.json(notes);
+            // mongoose.connection.close();
+        })
+        .catch((err) => {
+            console.error(err);
+        });
+
 });
 
-app.get('/api/notes/:id', (request, response) => {
-    const id = Number(request.params.id);   //La request siempre va a llegar un string
-    const note = notes.find(note => note.id === id);
-    note ? response.json(note) : response.status(404).end();
+//Consultar uno
+app.get('/api/notes/:id', (request, response, next) => {
+    const id = request.params.id;   //La request siempre va a llegar un string
+
+    Note.findById(id).then(note => {
+        // console.log(note);
+        note ? response.json(note) : response.status(404).end()
+    })
+        .catch((err) => {
+            // console.error(err);
+            // response.send('Parámetros inválidos').status(400).end()
+            next(err);
+        });
 });
 
 
-app.delete('/api/notes/:id', (request, response) => {
-    const id = Number(request.params.id);   //La request siempre va a llegar un string
-    notes = notes.filter(note => note.id != id);
-    notes ? response.json(notes) : response.status(404).end();
+//Eliminar
+app.delete('/api/notes/:id', (request, response, next) => {
+    const id = request.params.id;   //La request siempre va a llegar un string
+    // notes = notes.filter(note => note.id != id);
+    // notes ? response.json(notes) : response.status(404).end();
+    console.log('Id a borrar', id);
+    Note.findByIdAndRemove(id).then(() => {
+        // console.log(note);
+        response.status(204).end()
+    })
+        .catch(err => next(err));
 });
 
+
+//Crear
 app.post('/api/notes', (request, response) => {
     const note = request.body;
-    // console.log(note);
+    console.log(note);
     // response.send(note);
 
     if (!note || !note.body) {
@@ -58,37 +96,54 @@ app.post('/api/notes', (request, response) => {
         });
     }
 
-    const ids = notes.map(note => note.id);
-    // console.log(ids);
-    const maxId = Math.max(...ids);
-    // console.log(maxId);
+
+    const newNote = new Note({
+        userId: note.userId,
+        title: note.title,
+        body: note.body,
+        date: new Date,
+        important: note.important || false
+    })
+    newNote.save().then(savedNote => {
+        console.log(savedNote);
+        response.status(201).json(savedNote);
+        // mongoose.connection.close();
+
+    })
+        .catch((err) => {
+            console.error(err);
+        });
+
+
+});
+
+//Actualizar
+app.put('/api/notes/:id', (request, response) => {
+    const { id } = request.params;   //La request siempre va a llegar un string
+    const note = request.body;
+
+    console.log('La id', id);
+    console.log('Datos', note);
 
     const newNote = {
-        // id: maxId + 1,
-        // date: new Date().toISOString(),
-        // body: note.content,
-        // important: typeof note.important != 'undefined' ? note.important : false
-
-        userId: maxId + 1,
-        id: maxId + 1,
-        title: note.body,
-        body: note.body
+        title: note.title,
+        body: note.body,
+        important: note.important || false
     }
-    console.log(newNote);
 
-    notes = [...notes, newNote];
-    response.status(201).json(newNote);
-});
-
-app.use((request, response, next) => {
-    response.status(404).json({
-        error: 'Not found'
+    Note.findByIdAndUpdate(id, newNote, { new: true }).then(result => {
+        console.log(result);
+        response.json(result);
     });
-    next();
 });
 
 
-const PORT = 3001;
+//Middleware
+app.use(notFound);
+app.use(handleErrors)
+
+
+const PORT = process.env.port || 3001;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
