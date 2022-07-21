@@ -77,7 +77,7 @@ export default function ServerConnect() {
     const handleSubmit = (event) => {
         event.preventDefault();
         const newNoteClass = {
-            userId: notes.length + 1,
+            userId: '62d73b368bdbfb845d0cf9b6',
             id: notes.length + 1,
             title: newNote,
             body: newNote,

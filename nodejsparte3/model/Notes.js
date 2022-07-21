@@ -2,7 +2,10 @@ const { Schema, model } = require('mongoose');
 
 //Este es el equema o contrato 
 const noteSchema = new Schema({
-    userId: Number,
+    userId: [{
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    }],
     title: String,
     body: String,
     date: Date,

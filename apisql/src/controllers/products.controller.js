@@ -11,6 +11,29 @@ export const getProducts = async (req, res) => {
   }
 };
 
+
+//stored procedure
+// let executeQuery = async (value, country) => {
+//   try {
+//       let pool = await sql.connect(dbConfig);
+//       let results = await pool.request()
+//           .input('input_parameter', sql.Int, value)
+//           .input('Country', sql.VarChar(50), country)
+//           // .output('output_parameter', sql.VarChar(50))
+//           .execute('procedure_name')
+
+//       console.dir(results);
+
+//   } catch (err) {
+//       res.json({
+//           "error": true,
+//           "message": "Error executing query"
+//       })
+//   }
+// }
+
+// executeQuery(value, country);
+
 export const createNewProduct = async (req, res) => {
   const { name, description } = req.body;
   let { quantity } = req.body;

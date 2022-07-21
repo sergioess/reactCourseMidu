@@ -25,32 +25,32 @@ beforeEach(async () => {
 })
 
 
-test('notes are returned as json', async () => {
+test.skip('notes are returned as json', async () => {
     await api.get('/api/notes')
         .expect(200)
         .expect('Content-Type', /application\/json/)
 })
 
-test('there are two notes', async () => {
+test.skip('there are two notes', async () => {
     const response = await api.get('/api/notes')
 
     expect(response.body).toHaveLength(initialNotes.length);
 })
 
-test('the first note es about Bootcamp', async () => {
+test.skip('the first note es about Bootcamp', async () => {
     const response = await api.get('/api/notes')
 
     expect(response.body[0].title).toBe('Aprendiendo en Bootcamp');
 })
 
-test('some title es about Bootvamp', async () => {
+test.skip('some title es about Bootvamp', async () => {
 
     const { titles, response } = await getAllContentFromNotes();
 
     expect(titles).toContain('Aprendiendo en Bootcamp');
 })
 
-test('a valid note can be added', async () => {
+test.skip('a valid note can be added', async () => {
     const newNote = {
         userId: 1,
         title: 'Segundo Tema',
@@ -74,7 +74,7 @@ test('a valid note can be added', async () => {
 })
 
 
-test('a note without a title is not added', async () => {
+test.skip('a note without a title is not added', async () => {
     const newNote = {
         body: 'Frontend whit React',
         date: new Date(),
@@ -91,7 +91,7 @@ test('a note without a title is not added', async () => {
 
 })
 
-describe('DELETE NOTE ------', () => {
+describe.skip('DELETE NOTE ------', () => {
     test('a note can be delete', async () => {
         const { response: firstResponse } = await getAllContentFromNotes();
         const id = firstResponse.body[0].id;

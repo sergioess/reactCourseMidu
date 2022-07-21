@@ -2,8 +2,10 @@ POST http://localhost:3001/api/notes/
 Content-Type: application/json
 
 {
-    "content": "ssss",
-    "important" : true
+        "userId": 1,
+        "title": "Segundo Tema",
+        "body": "Frontend whit React",
+        "important": true
 }
 
 ###
