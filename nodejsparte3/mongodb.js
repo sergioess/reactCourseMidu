@@ -18,7 +18,8 @@ mongoose.connect(connectionString, {
 
 process.on('uncaughtException', () => {
     console.log('Estoy cerrando la conexióna a la Base de Datos')
-    mongoose.connection.disconnect();
+    // mongoose.connection.disconnect();
+    mongoose.disconnect();
 });
 
 

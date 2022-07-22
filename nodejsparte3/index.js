@@ -15,6 +15,7 @@ const notFound = require('./middleware/notFound');
 //Llamado a Rutas y Controlles
 const usersRouter = require('./controllers/users');
 const notesRouter = require('./controllers/notes');
+const loginRouter = require('./controllers/login');
 
 
 //Inicia la aplicación
@@ -48,6 +49,7 @@ app.get('/', (request, response) => {
 //Rutas
 app.use('/api/notes', notesRouter);
 app.use('/api/users', usersRouter);
+app.use('/api/login', loginRouter);
 
 //Middleware
 app.use(notFound);

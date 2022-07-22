@@ -54,3 +54,8 @@ usersRouter.get('/', async (request, response) => {
 });
 
 module.exports = usersRouter;
+
+
+// "username": "sergioess",
+// "name": "Sergio Sanmiguel",
+// "password": "sess1215"

@@ -27,3 +27,8 @@ userSchema.set('toJSON', {
 const User = model('User', userSchema);
 
 module.exports = User;
+
+
+// "username": "sergioess",
+// "name": "Sergio Sanmiguel",
+// "password": "sess1215"

@@ -2,6 +2,10 @@ const notesRouter = require('express').Router();
 // const { request } = require('express');
 const Note = require('../model/Notes');
 const User = require('../model/User');
+// const jwt = require('jsonwebtoken')
+
+const userExtractor = require('../middleware/userExtractor')
+
 
 //Consultar todos con Promesas
 // notesRouter.get('', (request, response) => {
@@ -24,7 +28,7 @@ notesRouter.get('/', async (request, response) => {
     })
     response.json(notes);
 
-    console.log(notes);
+    // console.log(notes);
 });
 
 
@@ -56,7 +60,7 @@ notesRouter.get('/:id', (request, response, next) => {
 // });
 
 //Eliminar con async y await
-notesRouter.delete('/:id', async (request, response, next) => {
+notesRouter.delete('/:id', userExtractor, async (request, response, next) => {
     const id = request.params.id;   //La request siempre va a llegar un string
     console.log('Id a borrar', id);
     try {
@@ -106,19 +110,22 @@ notesRouter.delete('/:id', async (request, response, next) => {
 // });
 
 //Crear con async y await
-notesRouter.post('/', async (request, response, next) => {
+// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiU2VyZ2lvIFNhbm1pZ3VlbCIsInVzZXJuYW1lIjoic2VyZ2lvZXNzIiwiaWF0IjoxNjU4NDQ0NTE0fQ.eUhavLR6uXcHwtwiDW1Gn7Zd332fD7LcSOhRs38ZCOw
+notesRouter.post('/', userExtractor, async (request, response, next) => {
+    //entramos por post, usa el middleware y luego el async
+
+
     // const note = request.body;
     const {
         title,
         body,
-        important = false,
-        userId
+        important = false
     } = request.body;
+
+    const { userId } = request;
 
     const user = await User.findById(userId)
 
-    console.log('El titulo -> ', title);
-    // console.log('El titulo -> ', note);
     // response.send(note);
 
     if (!body) {
@@ -134,7 +141,7 @@ notesRouter.post('/', async (request, response, next) => {
     }
 
     const newNote = new Note({
-        userId: user._id,
+        userId,
         title,
         body,
         date: new Date(),
@@ -158,7 +165,7 @@ notesRouter.post('/', async (request, response, next) => {
 });
 
 //Actualizar
-notesRouter.put('/:id', (request, response) => {
+notesRouter.put('/:id', userExtractor, (request, response) => {
     const { id } = request.params;   //La request siempre va a llegar un string
     const note = request.body;
 

@@ -3,11 +3,15 @@
 import axios from 'axios';
 
 
-export const create = ({ title, body, userId }) => {
+export const create = ({ title, body, userId, token }) => {
 
-
+    // console.log('Token', token)
     return axios
-        .post('http://localhost:3001/api/notes', { title, body, userId })
+        .post('http://localhost:3001/api/notes', { title, body, userId }, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
         .then(response => {
             const { data } = response;
             return data;
