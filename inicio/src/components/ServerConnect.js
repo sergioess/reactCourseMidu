@@ -3,18 +3,20 @@ import './formulario.css';
 // import { getAllPosts } from '../services/posts/getAllPosts';
 // import { createPost } from '../services/posts/createPost';
 
-import { getAll as getAllPosts, create as createPost } from '../services/posts';
+import { getAll as getAllPosts } from '../services/posts';
 import { makeLogin } from '../services/login';
 
 import { useEffect, useState } from 'react';
 // import axios from 'axios';
 
+//Componentes
+import LoginForm from './LoginForm';
+import NoteForm from './NoteForm';
 
 
 export default function ServerConnect() {
 
     const [notes, setNotes] = useState([]);
-    const [newNote, setNewNote] = useState('');
     const [showAll, setShowAll] = useState(true);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
@@ -31,6 +33,7 @@ export default function ServerConnect() {
 
 
     //useEffect => Se ejecuta cada vez que se renderiza, se le pasa una funcion y un array de dependencias, la idea es que se ejecute solo la primeta vez
+    // por eso el array de dependencias queda vacio
     useEffect(() => {
         setLoading(true);
 
@@ -63,70 +66,35 @@ export default function ServerConnect() {
             setLoading(false);
         });
 
-        if (window.localStorage.getItem('user')) {
-            const userLogguer = window.localStorage.getItem('user')
-            const objectUSer = JSON.parse(userLogguer);
-            setUser(objectUSer);
-        }
+
 
 
     }, []);
 
-
-    //Otro useEffect solo con el newNote
+    //Otro useEffect para leer el localStorage
     useEffect(() => {
-        console.log("Se ejecuta solo cuando se actualiza newNote");
-    }, [newNote]);
+        const userLogguer = window.localStorage.getItem('user')
+        if (userLogguer) {
+
+            const objectUSer = JSON.parse(userLogguer);
+            setUser(objectUSer);
+        }
+    }, []);
+
+
+
 
     // setNotes([...notes, json])
 
-    const handleInputChange = (event) => {
-        // console.log(event.target.value);
-        setNewNote(event.target.value);
-    };
-
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        console.log('El id', window.localStorage.getItem('user').id)
-
-        const newNoteClass = {
-            userId: user.id,
-            title: newNote,
-            body: newNote,
-            token: user.token
-        };
-
-        // axios
-        //     .post('https://jsonplaceholder.typicode.com/posts', newNoteClass)
-        //     .then(response => {
-        //         const { data } = response;
-        //         // setNotes([...notes, data]);
-        //         setNotes((prevNotes) => prevNotes.concat(data));
-
-        //     });
-
-        // const token = user.token;
-
-        setError('');
-        console.log(newNoteClass);
-        // console.log('Token 0', token);
-        createPost(newNoteClass).then((newPost) => {
-            // console.log('Token1', token)
-            setNotes((prevNotes) => prevNotes.concat(newPost));
-        })
-            .catch((e) => {
-                console.error(e);
-                setError("La Aplicación ha fallado");
-                setTimeout(() => {
-                    setError('');
-                }, 5000);
-            });
-
-
-        // setNotes([...notes, newNoteClass]);
-        // console.log(newNoteClass);
-        setNewNote("");
+    const handleLogOut = (event) => {
+        setUser(null);
+        window.localStorage.removeItem('user');
     }
+
+    const addNote = (noteObject) => {
+        setNotes(notes.concat(noteObject));
+    }
+
 
     const handleLogin = (event) => {
         event.preventDefault();
@@ -165,28 +133,6 @@ export default function ServerConnect() {
     }
 
 
-    const renderLoginForm = () => {
-        return (
-            <form className="row text-center px-5 pt-2" onSubmit={handleLogin}>
-                <input type="text" value={userName} name='Username' placeholder='Username' onChange={(event) => setUserName(event.target.value)} />
-                <input type="password" value={password} name='Pasword' placeholder='Password' onChange={(event) => setPassword(event.target.value)} />
-                <button type="submit" className="btn btn-primary d-block mt-2" >Login</button>
-
-            </form>
-        )
-    }
-
-    const renderCreateNote = () => {
-
-        return (
-            <form className="row text-center px-5 pt-2" onSubmit={handleSubmit}>
-                <input className="form-group" placeholder='Write new Note' type="text" onChange={handleInputChange} value={newNote}></input>
-                <button type="submit" className="btn btn-primary d-block mt-2" >New Note</button>
-            </form>
-
-        )
-    }
-
     return (
 
 
@@ -194,8 +140,21 @@ export default function ServerConnect() {
             <h1>Clase 4 del Bootcamp</h1>
 
 
+            {user ? <NoteForm
+                handleLogOut={handleLogOut}
+                setError={setError}
+                setNotes={setNotes}
+                addNote={addNote}
+                user={user}
+            />
 
-            {user ? renderCreateNote() : renderLoginForm()}
+                : <LoginForm
+                    username={userName}
+                    password={password}
+                    handleUserNameChange={(event) => setUserName(event.target.value)}
+                    handlePasswordChange={(event) => setPassword(event.target.value)}
+                    handleLogin={handleLogin}
+                />}
 
 
 
@@ -222,6 +181,7 @@ export default function ServerConnect() {
             <div>
                 <p>Usuario: {user ? user.token : ''}</p>
             </div>
+
 
         </div>
     );

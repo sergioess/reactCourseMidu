@@ -1,9 +1,9 @@
-import { getConnection, querys, sql } from "../database";
+import { getConnection, querysArticulos, sql } from "../database";
 
 export const getProducts = async (req, res) => {
   try {
     const pool = await getConnection();
-    const result = await pool.request().query(querys.getAllProducts);
+    const result = await pool.request().query(querysArticulos.getAllProducts);
     res.json(result.recordset);
   } catch (error) {
     res.status(500);
@@ -53,7 +53,7 @@ export const createNewProduct = async (req, res) => {
       .input("name", sql.VarChar, name)
       .input("description", sql.Text, description)
       .input("quantity", sql.Int, quantity)
-      .query(querys.addNewProduct);
+      .query(querysArticulos.addNewProduct);
 
     res.json({ name, description, quantity });
   } catch (error) {
@@ -69,7 +69,7 @@ export const getProductById = async (req, res) => {
     const result = await pool
       .request()
       .input("id", req.params.id)
-      .query(querys.getProducById);
+      .query(querysArticulos.getProducById);
     return res.json(result.recordset[0]);
   } catch (error) {
     res.status(500);
@@ -84,7 +84,7 @@ export const deleteProductById = async (req, res) => {
     const result = await pool
       .request()
       .input("id", req.params.id)
-      .query(querys.deleteProduct);
+      .query(querysArticulos.deleteProduct);
 
     if (result.rowsAffected[0] === 0) return res.sendStatus(404);
 
@@ -98,7 +98,7 @@ export const deleteProductById = async (req, res) => {
 export const getTotalProducts = async (req, res) => {
   const pool = await getConnection();
 
-  const result = await pool.request().query(querys.getTotalProducts);
+  const result = await pool.request().query(querysArticulos.getTotalProducts);
   console.log(result);
   res.json(result.recordset[0][""]);
 };
@@ -119,7 +119,7 @@ export const updateProductById = async (req, res) => {
       .input("description", sql.Text, description)
       .input("quantity", sql.Int, quantity)
       .input("id", req.params.id)
-      .query(querys.updateProductById);
+      .query(querysArticulos.updateProductById);
     res.json({ name, description, quantity });
   } catch (error) {
     res.status(500);

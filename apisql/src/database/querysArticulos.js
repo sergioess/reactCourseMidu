@@ -1,4 +1,4 @@
-export const querys = {
+export const querysArticulos = {
   getAllProducts: "SELECT CODARTICULO, REFPROVEEDOR, DESCRIPCION FROM ARTICULOS",
   getProducById: "SELECT * FROM Products Where Id = @Id",
   addNewProduct:
