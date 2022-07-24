@@ -8,7 +8,7 @@ export const makeLogin = ({ username, password }) => {
     // console.log(username);
 
     return axios
-        .post('http://localhost:3001/api/login', { username, password })
+        .post('/api/login', { username, password })
         .then(response => {
             const { data } = response;
             // console.log(data);

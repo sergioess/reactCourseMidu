@@ -26,6 +26,8 @@ app.use(cors({
 process.env.TZ = 'America/Bogota'
 
 app.use(express.json());
+app.use(express.static('../inicio/build')); //Para servir una carpeta estática se pueden hacer sub carpetas
+
 app.use(express.static('images')); //Para servir una carpeta estática se pueden hacer sub carpetas
 app.use('/images', express.static('images')); //Para servir una carpeta estática se pueden hacer sub carpetas
 app.use('/static', express.static('images')); //Para servir una carpeta estática se pueden hacer sub carpetas

@@ -9,7 +9,7 @@ export const create = ({ title, body, userId, token }) => {
 
     // console.log('Token', token)
     return axios
-        .post('http://localhost:3001/api/notes', { title, body, userId }, {
+        .post('/api/notes', { title, body, userId }, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -25,7 +25,7 @@ export const create = ({ title, body, userId, token }) => {
 export const getAll = () => {
 
     return axios
-        .get('http://localhost:3001/api/notes')
+        .get('/api/notes')
         .then(response => {
             const { data } = response;
             // console.log(data);
